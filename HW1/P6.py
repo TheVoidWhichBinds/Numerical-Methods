@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 n = 30
-Taylor_machine = np.zeros(30,1)
+Taylor_machine = np.zeros(30)
 import numpy as np
 
 Taylor_exact = np.array([
@@ -51,7 +51,8 @@ def exponential(x):
 plt.title("Roundoff Error in the Exponential Taylor Series")
 plt.xlabel("number of terms in Taylor series expansion n")
 plt.ylabel("Difference between exact expansion and computer expansion")
-plt.plot(np.arange(0,n,1), Taylor_machine - Taylor_exact)
+plt.plot(np.arange(0,n), Taylor_machine - Taylor_exact)
+plt.savefig('Rounding_Taylor')
 
 
 
