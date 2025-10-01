@@ -3,14 +3,19 @@ import matplotlib.pyplot as plt
 import scipy.integrate as integrate
 
 #### global variables ####
-N_max = 1000 #number of steps
 a = 0
 b = 4
-h = (b-a)/N
+N = np.linspace(1e-6, 1e-1, 100)
 ########################
 
 
 #### function definitions ####
+def step_size():
+
+  return (b-a)/N
+
+
+
 def f(x): #function definition
   return np.exp(x)/(1 + 4*x**2)
 
@@ -35,5 +40,5 @@ plt.figure()
 plt.title("Trapezoidal Rule Convergence")
 plt.xlabel(" ")
 plt.ylabel(" ")
-plt.plot(
+
   
