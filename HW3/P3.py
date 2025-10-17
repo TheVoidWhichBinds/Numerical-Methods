@@ -17,20 +17,18 @@ A[:,3] = np.exp(t_val)
 
 
 def QR_Mod_GS(A):
-    Q = np.zeros((m, n))
+    Q = np.empty((m, n))
     R = np.zeros((n, n))
 
     for i in range(n):
         u = A[:, i].copy() #intermediate vector u of current A column
-
-        # Orthogonality by subtracting other vectors
+        # Orthogonality by subtracting other vectors:
         for s in range(i):
             R[s, i] = np.dot(Q[:, s], u)
             u -= R[s, i] * Q[:, s]
-        
-        # Normalize the orthogonalized vector
+        # Normalize the orthogonalized vector:
         R[i, i] = np.linalg.norm(u)
-        Q[:, i] = u / R[i, i]
+        Q[:, i] = u / np.linalg.norm(u)
 
     return Q, R
 
