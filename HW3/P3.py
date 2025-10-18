@@ -65,7 +65,7 @@ plt.figure(figsize=(7, 5))
 plt.scatter(t_val, b_val, s=18, label="Data") #noisy data
 plt.plot(t_plot, y_plot, linewidth=2, linestyle="--", color='orange', label="Fit (Householder)") 
 
-b_real = 1 + 0.8*t_plot - 0.5*t_plot**2 + 0.3*np.exp(t_plot) #noiseless data
+b_real = 1 + 0.8*t_plot - 0.5*t_plot**2 + 0.3*np.exp(t_plot) #noiseless data SUSPICIOUS!!!!!!!!
 plt.plot(t_plot, b_real, linewidth=2, color='black', label='Fit (Noiseless)')
 plt.ylabel("b")
 plt.title("Linear Least Squares Fit using QR Decomposition")
@@ -115,28 +115,36 @@ def D(x, eps):
 
 
 # Nonlinear ODE, set to zero, to be minimized:
-def G_minimizer(x_0, eps_0):
+def G_minimizer(x_0, eps):
 
     iter_max = 1000 #max allowed iterations
     x = np.empty((iter_max, 4)) #initializing x iteration array
-    x[0,:] = x_0 
+    x[0,:] = x_0 #initial guess
+    eps = eps
 
-    for k in range(0,10): #order of magnitudes smaller 
-        eps = eps_0/10**k
+    for i in range(1,iter_max):
+        Q,R = QR_Householder(A_out.T @ D(x[i-1], eps) @ A_out) #takes iteration equation, QR decomp
+        x[i] = back_sub(R,  Q.T @ A_out.T @ D(x[i-1], eps) @ b_out) #solves for x_i
+        G_norm = np.linalg.norm(A_out.T @ D(x[i], eps) @ (A_out @ x[i] - b_out), 2) #2 NORM??? 1 NORM???
+        iter = i #documents iteration
+        if G_norm < 1E-6: #threshold to stop loop
+            break
 
-        for i in range(1,iter_max):
-            Q,R = QR_Householder(A_out.T @ D(x[i-1], eps) @ A_out) #takes iteration equation, QR decomp
-            x[i] = back_sub(R,  Q.T @ A_out.T @ D(x[i-1], eps) @ b_out) #solves for x_i
-            G_norm = np.linalg.norm(A_out.T @ D(x[i], eps) @ (A_out @ x[i] - b_out), 2) #2 NORM??? 1 NORM???
-            iter = i #documents iteration
-            if G_norm < 1E-6: #threshold to stop loop
-                print('The required iterations to converge G(x) below a tolerance of', 
-                eps, 'is', iter)
-                break
-
-    return 
+    return x[i] #returns final x after iterations
 
 
-G_minimizer(([0.5,0.5,0.5,0.5]), 0.05) #initial guess input for x parameters
+x_L1 = G_minimizer(([0.5,0.5,0.5,0.5]), 0.05) #initial guess input for x parameters, eps
     
-    
+
+
+#----------- Plotting Outlier with L1-Norm Solution -----------#
+plt.figure(figsize=(7, 5))
+plt.title("Linear Least Squares Fit with Outlier using 1-Norm Minimization")
+plt.scatter(t_out, b_out, s=18, label="Data with Outlier")
+plt.plot(t_plot_o, y_plot_o, linewidth=2, linestyle="--", color='orange', label="Fit (Householder with Outlier)")
+plt.plot(t_plot_o, A_out[idxo] @ x_L1, linewidth=2, color='green', label='Fit (1-Norm Minimization)')
+plt.xlabel("t")
+plt.ylabel("b")
+plt.legend()
+plt.tight_layout()
+plt.savefig('LLS_L1.png', dpi=300)
