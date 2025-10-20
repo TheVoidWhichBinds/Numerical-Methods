@@ -1,5 +1,7 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
+downloads_dir = os.path.expanduser('~/Downloads') 
 
 m = 20 #number of data points/rows
 t = 2 * np.random.rand(m, 1) #generating t array
@@ -71,7 +73,8 @@ plt.ylabel("b")
 plt.title("Linear Least Squares Fit using QR Decomposition")
 plt.legend()
 plt.tight_layout()
-plt.savefig('LLS.png', dpi=300)
+plt.savefig(os.path.join(downloads_dir, "LLS.png"), dpi=200, bbox_inches="tight")
+
 
 
 
@@ -97,7 +100,7 @@ plt.ylabel("b")
 plt.title("Linear Least Squares Fit with Outlier using QR Decomposition")
 plt.legend()
 plt.tight_layout()
-plt.savefig('LLS_outlier.png', dpi=300)
+plt.savefig(os.path.join(downloads_dir, "LLS_outlier.png"), dpi=200, bbox_inches="tight")
 
 
 
@@ -147,4 +150,4 @@ plt.xlabel("t")
 plt.ylabel("b")
 plt.legend()
 plt.tight_layout()
-plt.savefig('LLS_L1.png', dpi=300)
+plt.savefig(os.path.join(downloads_dir, "LLS_L1.png"), dpi=200, bbox_inches="tight")
