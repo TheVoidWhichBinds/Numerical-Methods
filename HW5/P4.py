@@ -21,7 +21,6 @@ def monomial_solver(x_0, x_1, x_2):
     return coeff
 
 
-
 #-------------- Plotting ---------------#
 t= np.linspace(0,1.2,100)
 #Theoretical fit:

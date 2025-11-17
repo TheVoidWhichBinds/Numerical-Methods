@@ -1,10 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import os
-#path to Downloads
 
 x = np.linspace(0,9,1000)
 
+#------- Laguerre Polynomial Recursion ------#
 def my_l(k, x):
     """
     Arguments -------------------------------------------------
@@ -41,3 +40,4 @@ for i in range(0, 5):
 
 plt.legend()
 plt.savefig('Recursion.png')
+plt.show()
