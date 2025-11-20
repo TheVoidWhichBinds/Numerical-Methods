@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.interpolate import CubicSpline
 
 
 #Exact Function:
@@ -23,15 +24,12 @@ def matrix_splines():
         [0, 0, 0, 0,   1, 2, 4, 8,   0, 0, 0, 0],
         [0, 0, 0, 0,   0, 0, 0, 0,   1, 2, 4, 8],
         [0, 0, 0, 0,   0, 0, 0, 0,   1, 3, 9, 27],
-
         # First Derivative Continuity
         [0, 1,  2,  3,     0, -1, -2, -3,     0, 0, 0, 0],
         [0, 0,  0,  0,     0,  1,  4, 12,     0, -1, -4, -12],
-
         # Second Derivative Continuity
         [0, 0,  2,  6,     0,  0, -2, -6,     0, 0, 0, 0],
         [0, 0,  0,  0,     0,  0,  2, 12,     0, 0, -2, -12],
-
         # End Conditions (natural)
         [0, 0,  2,  0,     0, 0, 0, 0,        0, 0, 0, 0],
         [0, 0,  0,  0,     0, 0, 0, 0,        0, 0, 2, 18]
@@ -75,7 +73,7 @@ coeff_mat = coeff.reshape(3, 4) #rows: [a0^j, a1^j, a2^j, a3^j]
 
 #------------------------ Plotting ---------------------------#
 plt.figure()
-plt.title('Cubic Splines Interpolation')
+plt.title('Cubic Splines Interpolation (Zero Conditions on 2nd Derivative)')
 plt.xlabel('t')
 plt.ylabel('y')
 #Plotting each spline segment on its interval:
@@ -86,7 +84,7 @@ for j in range(3):
     a0, a1, a2, a3 = coeff_mat[j]
     s_seg = a0 + a1*t_seg + a2*t_seg**2 + a3*t_seg**3
 
-    plt.plot(t_seg, s_seg, label=f"s_{j}(t) on [{t_start},{t_end}]")
+    plt.plot(t_seg, s_seg, lw=4, label=f"s_{j}(t) on [{t_start},{t_end}]")
 
 
 #Plotting exact function:
@@ -95,8 +93,8 @@ plt.plot(t, exact_func(t), color='black', label='Exact Function')
 plt.scatter(t_knots, exact_func(t_knots), c='black')
 
 #Plotting Python solver function:
-
-
+spline_sol= CubicSpline(t_knots, y_pts)
+plt.plot(t, spline_sol(t), color='red', label='SciPy Splines')
 
 plt.legend(loc='lower left')
 plt.show()
