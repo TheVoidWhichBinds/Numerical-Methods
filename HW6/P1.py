@@ -5,12 +5,12 @@ from scipy.interpolate import CubicSpline
 
 #Exact Function:
 def exact_func(t):
-    f= np.cos(np.pi*t)*np.exp(t/2)
+    f = np.cos(np.pi*t)*np.exp(t/2)
     return f
 
 #Specific Data Points:
-t_knots= np.array([0,1,2,3])
-y_pts= exact_func(t_knots)
+t_knots = np.array([0,1,2,3])
+y_pts = exact_func(t_knots)
 
 
 
@@ -79,7 +79,7 @@ plt.ylabel('y')
 #Plotting each spline segment on its interval:
 for j in range(3):
     t_start = t_knots[j]
-    t_end   = t_knots[j+1]
+    t_end = t_knots[j+1]
     t_seg = np.linspace(t_start, t_end, 200)
     a0, a1, a2, a3 = coeff_mat[j]
     s_seg = a0 + a1*t_seg + a2*t_seg**2 + a3*t_seg**3
