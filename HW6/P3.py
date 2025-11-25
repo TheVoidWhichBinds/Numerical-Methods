@@ -81,8 +81,8 @@ def convergence_order():
     for k in range(1, len(e)-1):
         p_vals.append(np.log(e[k+1]/e[k]) / np.log(e[k] / e[k-1]))
     p_vals = np.array(p_vals)
-    return p_vals[-3:].mean() #average of last 3 estimates (G-N errors initially erratic)
+    return p_vals[-10:].mean() #average of last 3 estimates (G-N errors initially erratic)
     
-print(np.round(convergence_order(),2))
+print(np.round(convergence_order(),3))
 
 
