@@ -75,3 +75,10 @@ plt.plot(x, f2(x), label='f(x)')
 plt.scatter([newton_method(0.1), newton_method(2)], [0,0], label='roots')
 plt.grid(True)
 #plt.show()
+
+
+
+
+
+
+########################################## SUBSECTION D ########################################## 
