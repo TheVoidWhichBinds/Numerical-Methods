@@ -18,11 +18,9 @@ def fixed_point(k):
     max_iter = 10000 # max iterations
     num_iter = 0
     x = x_0 #starting value
-    Delta_x = 1
     #
-    while Delta_x > 1E-13 and num_iter < max_iter:
-        Delta_x = k*f1(x)
-        x = x + Delta_x
+    while np.abs(f1(x)) > 1E-8 and num_iter < max_iter:
+        x = x + k*f1(x)
         num_iter += 1
     #
     return num_iter
@@ -68,7 +66,7 @@ def newton1D(init_guess, f, f_prime):
     Delta_x = 1
     num_iter = 0
     #
-    while Delta_x > 1E-16 and num_iter < max_iter:
+    while np.abs(f(x)) > 1E-8 and num_iter < max_iter:
         Delta_x = - f(x)/f_prime(x)
         x = x + Delta_x
         x_k.append(x.copy()) 
@@ -81,13 +79,13 @@ def newton1D(init_guess, f, f_prime):
 def c_plotting():
     x = np.linspace(0.1,3,100)
     plt.figure()
-    plt.title('')
+    plt.title('1D Newton Method')
     plt.plot(x, f2(x), label='f(x)')
     root1 = newton1D(0.1, f2, f2_prime)[0]
     root2 = newton1D(2, f2, f2_prime)[0]
     plt.scatter([root1, root2], [0,0], label='roots')
     plt.grid(True)
-    plt.savefig('1D Newton Method')
+    plt.savefig('1D_Newton.png')
     plt.show()
 
 
@@ -107,8 +105,8 @@ def intersect(coord):
 def intersect_jac(coord):
     x, y = coord
     J = np.array([
-        [x / 8.0,  y / 2.0],
-        [-2.0 * x, 1.0    ],
+        [x / 8.0, y / 2.0],
+        [-2.0 * x, 1.0],
     ])
     return J
 
@@ -121,7 +119,7 @@ def newton2D(init_guess, F, J):
     max_iter = 10000
     Delta_xy = np.full_like(xy, np.inf)
     #
-    while np.linalg.norm(Delta_xy,2) > 1E-16 and num_iter < max_iter:
+    while np.linalg.norm(F(xy),2) > 1E-8 and num_iter < max_iter:
         F_k = F(xy)
         J_k = J(xy)
         Delta_xy = -np.linalg.solve(J_k, F_k)
@@ -129,14 +127,17 @@ def newton2D(init_guess, F, J):
         xy_k.append(xy.copy())
         num_iter += 1
     #
-    return xy, np.array(xy_k)
+    return np.array(xy_k)
 
 
 #----------- Plotting -----------#
 def d_plotting(guess_coords):
     plt.figure()
-    plt.title('Newton Iterations')
-    x = np.linspace(-3,3,100)
+    plt.title('2D Newton Method')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    #
+    x = np.linspace(-4,4,10000)
     y_ellipse = np.sqrt(4 - x**2/4)
     y_parabola = x**2 - 2
     #
@@ -145,17 +146,17 @@ def d_plotting(guess_coords):
     plt.plot(x, y_parabola, color='grey', label='parabola')
     #
     for i, g in enumerate(guess_coords):
-        root, iter_coords = newton2D(g, intersect, intersect_jac)
+        iter_coords = newton2D(g, intersect, intersect_jac)
         cmap = plt.cm.tab10(i+1)
         alphas = np.linspace(0.3, 1.0, len(iter_coords))
-        for k in range(len(iter_coords)-4, len(iter_coords)):
+        for k in range(len(iter_coords)):
             plt.scatter(iter_coords[k,0], iter_coords[k,1], color=cmap, alpha=alphas[k])
-        print(root)
     #
     plt.legend()
     plt.grid(True)
-    plt.savefig('2D Newton Method')
+    plt.savefig('2D_Newton.png')
     plt.show()
+    return
 
 
 #------------------ Error & Convergence -----------------#
@@ -182,7 +183,7 @@ def convergence_order(guess_coords):
 
 
 ########################################## SUBSECTIONS A,C,D FUNCTION CALLS ########################################## 
-a_plotting()
-c_plotting()
-d_plotting(np.array([[0.01, 3],[0.01, -3],[2, -2]]))
+#a_plotting()
+#c_plotting()
+d_plotting(np.array([[0.01, 3],[-0.01, 3],[2, -2]]))
 #convergence_order(np.array([[0.01, 3],[0.01, -3],[2, -2]]))
