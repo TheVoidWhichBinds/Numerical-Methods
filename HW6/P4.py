@@ -67,7 +67,7 @@ def error_plotting(N_range):
 
 
 # Calling functions:
-error_plotting(np.arange(11,1001,10))
+error_plotting(np.arange(11,1801,10))
 
 
 

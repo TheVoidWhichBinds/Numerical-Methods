@@ -89,6 +89,7 @@ def c_plotting():
     plt.grid(True)
     plt.savefig('1D_Newton.png')
     plt.show()
+    print(f'iterates1= {newton1D(0.1, f2, f2_prime)[1]}, iterates2 = {newton1D(2, f2, f2_prime)[1]}')
 
 
 
@@ -185,7 +186,7 @@ def convergence_order(guess_coords):
 
 
 ########################################## SUBSECTIONS A,C,D FUNCTION CALLS ########################################## 
-a_plotting()
+#a_plotting()
 c_plotting()
-d_plotting(np.array([[0.01, 3],[-0.01, 3],[2, -2]]))
-convergence_order(np.array([[0.01, 3],[-0.01, 3],[2, -2]]))
+#d_plotting(np.array([[0.01, 3],[-0.01, 3],[2, -2]]))
+#convergence_order(np.array([[0.01, 3],[-0.01, 3],[2, -2]]))
