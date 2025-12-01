@@ -80,6 +80,8 @@ def c_plotting():
     x = np.linspace(0.1,3,100)
     plt.figure()
     plt.title('1D Newton Method')
+    plt.xlabel('x')
+    plt.ylabel('y')
     plt.plot(x, f2(x), label='f(x)')
     root1 = newton1D(0.1, f2, f2_prime)[0]
     root2 = newton1D(2, f2, f2_prime)[0]
@@ -119,7 +121,7 @@ def newton2D(init_guess, F, J):
     max_iter = 10000
     Delta_xy = np.full_like(xy, np.inf)
     #
-    while np.linalg.norm(F(xy),2) > 1E-8 and num_iter < max_iter:
+    while np.linalg.norm(F(xy),2) > 1E-10 and num_iter < max_iter:
         F_k = F(xy)
         J_k = J(xy)
         Delta_xy = -np.linalg.solve(J_k, F_k)
@@ -163,7 +165,7 @@ def d_plotting(guess_coords):
 # Prints convergence order for each iteration:
 def convergence_order(guess_coords):
     for g in guess_coords:
-        xy_iter = newton2D(g, intersect, intersect_jac)[1]
+        xy_iter = newton2D(g, intersect, intersect_jac)
         xy_star = xy_iter[-1] # iteratively solved solution
         errors = np.linalg.norm(xy_iter - xy_star, axis=1) #errors at each iteration
         e = errors[errors > 1e-15] # removing ~ zero errors so no log(0) issue arises
@@ -175,7 +177,7 @@ def convergence_order(guess_coords):
         #
         print(f'Convergence order for guess {g}:')
         for i, p in enumerate(p_vals):
-            print(f'p[{i}] = {p}')
+            print(f'p[{i}] = {np.round(p,1)}')
     #
     return
 
@@ -183,7 +185,7 @@ def convergence_order(guess_coords):
 
 
 ########################################## SUBSECTIONS A,C,D FUNCTION CALLS ########################################## 
-#a_plotting()
-#c_plotting()
+a_plotting()
+c_plotting()
 d_plotting(np.array([[0.01, 3],[-0.01, 3],[2, -2]]))
-#convergence_order(np.array([[0.01, 3],[0.01, -3],[2, -2]]))
+convergence_order(np.array([[0.01, 3],[-0.01, 3],[2, -2]]))

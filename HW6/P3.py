@@ -56,7 +56,7 @@ def gauss_newton(x_0):
     Delta_x = 1
     for k in range(max_iter):
         Q,R = np.linalg.qr(res_jacobian(x))
-        x +=  np.linalg.solve(R,-Q.T@residual(x))
+        x += np.linalg.solve(R,-Q.T@residual(x))
         x_k.append(x.copy())
         if np.linalg.norm(Delta_x) < 1E-16:
             break 

@@ -2,6 +2,8 @@ import numpy as np
 from scipy.integrate import quad
 import matplotlib.pyplot as plt
 
+
+######################################### SUBSECTION A ###########################################
 #----- Global Variables -----#
 a = 0 # lower bound
 b = 5 # upper bound
@@ -64,7 +66,48 @@ def error_plotting(N_range):
     return()
 
 
+# Calling functions:
+error_plotting(np.arange(11,1001,10))
+
+
+
+
+
+######################################### SUBSECTION B ###########################################
+#----- Error Order Estimation -----#
+
+def error_fit(N_range):
+    #
+    int_exact = quad(sqrt_func, a, b)[0]
+    trap_err = []
+    simp_err = []
+    #
+    for N in N_range:
+        int_trap, int_simp = integrals(N)
+        trap_err.append(np.abs(int_exact - int_trap))
+        simp_err.append(np.abs(int_exact - int_simp))
+    #
+    trap_err = np.array(trap_err)
+    simp_err = np.array(simp_err)
+    #
+    logN = np.log(N_range)
+    #
+    A = np.vstack([np.ones_like(logN), logN]).T
+    #
+    coeff_trap, _, _, _ = np.linalg.lstsq(A, np.log(trap_err), rcond=None)
+    coeff_simp, _, _, _ = np.linalg.lstsq(A, np.log(simp_err), rcond=None)
+    #
+    d_trap, kappa_trap = coeff_trap
+    d_simp, kappa_simp = coeff_simp
+    c_trap = np.exp(d_trap)
+    c_simp = np.exp(d_simp)
+    #
+    return c_trap, kappa_trap, c_simp, kappa_simp
 
 
 # Calling functions:
-error_plotting(np.arange(11,1001,10))
+N_vals = np.arange(11,1001,10)
+c_trap, kappa_trap, c_simp, kappa_simp = np.round(error_fit(N_vals),2)
+
+print(f'Trapezoidal fit:  c={c_trap},  kappa = {kappa_trap}')
+print(f'Simpson fit: c= {c_simp}, kappa={kappa_simp}')
